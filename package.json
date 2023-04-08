@@ -1,0 +1,21 @@
+{
+  "name": "maze",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mdhnpm/rgb-hex-converter": "^1.2.0",
+    "@types/node": "^18.15.11",
+    "jimp": "^0.22.7",
+    "nodemon": "^2.0.22"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
