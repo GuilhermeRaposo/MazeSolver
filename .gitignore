@@ -3,4 +3,4 @@ build
 launch.json
 
 output/*.png
-!output/tiny.png
+!output/normal.png

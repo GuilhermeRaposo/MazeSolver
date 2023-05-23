@@ -15,10 +15,10 @@ Mazes need to follow a couple of rules in order to be used by the program:
 ### Usage
 ```
 tsc
-node build/src/index.js tiny.png
+node build/src/index.js normal.png
 ```
 
-![example](output/tiny.png)
+![example](output/normal.png)
 
 ## Notes
 The code is not very efficient and big mazes will easily eat up all the RAM.
