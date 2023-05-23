@@ -1,4 +1,4 @@
-import { Maze, Point } from "../src/Maze"
+import { Maze, Point } from "../Maze"
 
 export default class AlwaysLeft {
     private maze: Maze;

@@ -1,7 +1,7 @@
 import Jimp = require("jimp");
 import Pixel from "./Pixel";
 import { Maze } from "./Maze";
-import AlwaysLeft from "../solving/alwaysLeft";
+import AlwaysLeft from "./solving/alwaysLeft";
 import fs from "fs";
 
 console.log("Starting...")
