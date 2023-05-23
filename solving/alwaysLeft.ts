@@ -1,61 +1,85 @@
 import { Maze, Point } from "../src/Maze"
 
-export default (maze: Maze): void => {
-    let current = maze.start;
-    let previous;
-    let deadEnd = false;
-    current.walked = true;
-    const walked: Point[] = [];
+export default class AlwaysLeft {
+    private maze: Maze;
+    private current: Point
+    private previous: Point | null = null;
+    private walked: Point[] = [];
+    private badPaths: Point[] = [];
 
-    while (current != maze.end) {
-        if (current.left && (current.left != previous || deadEnd)) {
-            deadEnd = false;
-            previous = current;
-            walked.push(current);
-            current = current.left;
-            current.walked = true;
-            checkBacktrack(walked);
-            continue;
+    constructor(maze: Maze){
+        this.maze = maze;
+        this.current = maze.start;
+        this.walked.push(this.current);
+        this.start(maze);
+    }
+
+    public start = (maze: Maze): void => {   
+        while (this.current != maze.end) {
+            if (this.current.left && this.current.left != this.previous && !this.badPaths.includes(this.current.left)) {
+                this.move(this.current.left);
+            } 
+            else if (this.current.down && this.current.down != this.previous && !this.badPaths.includes(this.current.down)) {
+                this.move(this.current.down);
+            } 
+            else if (this.current.right && this.current.right != this.previous && !this.badPaths.includes(this.current.right)) {
+                this.move(this.current.right);
+            } 
+            else if (this.current.up && this.current.up != this.previous && !this.badPaths.includes(this.current.up)) {
+                this.move(this.current.up);
+            }
+            else {
+                if (this.current.left == this.previous) this.backtrackAndBarricade(Direction.left);
+                else if (this.current.down == this.previous) this.backtrackAndBarricade(Direction.down);
+                else if (this.current.right == this.previous) this.backtrackAndBarricade(Direction.right);
+                else if (this.current.up == this.previous) this.backtrackAndBarricade(Direction.up);
+            }
         }
-        if (current.down && (current.down != previous || deadEnd)) {
-            deadEnd = false;
-            previous = current;
-            walked.push(current);
-            current = current.down;
-            current.walked = true;
-            checkBacktrack(walked);
-            continue;
+
+        this.paintWalked();
+    }
+
+    private paintWalked = () => {
+        this.maze.points.forEach(point => {
+            if (this.walked.includes(point))  point.walked = true;
+        });
+    }
+
+    private move = (point: Point, walked?: boolean) => {
+        this.previous = this.current;
+        this.current = point;
+        if (!this.walked.includes(this.current)) {
+            this.walked.push(this.current);
         }
-        if (current.right && (current.right != previous || deadEnd)) {
-            deadEnd = false;
-            previous = current;
-            walked.push(current);
-            current = current.right;
-            current.walked = true;
-            checkBacktrack(walked);
-            continue;
+        else {
+            this.walked.pop()
         }
-        if (current.up && (current.up != previous || deadEnd)) {
-            deadEnd = false;
-            previous = current;
-            walked.push(current);
-            current = current.up;
-            current.walked = true;
-            checkBacktrack(walked);
-            continue;
+    }
+
+    private checkBacktrack = (point: Point): boolean => this.walked.includes(point)
+
+    /**
+     * 
+     */
+    private backtrackAndBarricade = (direction: Direction) => {
+        const badPath = this.current;
+        if (direction == Direction.left && this.current.left) {
+            this.move(this.current.left);
         }
-        deadEnd = true;
+        else if (direction == Direction.down && this.current.down) {
+            this.move(this.current.down);
+        }
+        else if (direction == Direction.right && this.current.right) {
+
+            this.move(this.current.right);
+        }
+        else if (direction == Direction.up && this.current.up) {
+            this.move(this.current.up);
+        }
+        this.badPaths.push(badPath);
     }
 }
 
-const checkBacktrack = (walked: Point[]): void => {
-    if (new Set(walked).size !== walked.length) {
-        fixBacktrack(walked);
-    }
-}
-
-const fixBacktrack = (walked: Point[]): void => {
-    walked[walked.length - 2].walked = false;
-    walked.pop();
-    walked.pop();
+enum Direction {
+    left, down, right, up
 }
