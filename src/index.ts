@@ -2,12 +2,27 @@ import Jimp = require("jimp");
 import Pixel from "./Pixel";
 import { Maze } from "./Maze";
 import AlwaysLeft from "../solving/alwaysLeft";
-
-const imgSize = 10;
+import fs from "fs";
 
 console.log("Starting...")
 
-Jimp.read("./examples/normal.png", (err, img) => {
+// Read path
+process.argv = process.argv.slice(2);
+const fileName = process.argv[0];
+let fullPath = "";
+console.log(`./examples/${fileName}`)
+if (fs.existsSync(`./examples/${fileName}`)) {
+    fullPath = `./examples/${fileName}`;
+}
+else if (fs.existsSync(fileName)){
+    fullPath = fileName;
+}
+else {
+    console.log("File not found in either the root path or examples folder");
+    process.exit(1)
+}
+
+Jimp.read(fullPath, (err, img) => {
     // Read Image
     const bitmap = img.bitmap.data.toJSON().data
     const pixels: Pixel[] = [];
@@ -27,5 +42,5 @@ Jimp.read("./examples/normal.png", (err, img) => {
 
     // Save
     img.bitmap.data = Buffer.from(Pixel.toBufferStr(maze.toPixels(pixelsCount, img.bitmap.width)), "hex");
-    img.write("abc.png")
+    img.write(`./output/${fileName}`)
 });

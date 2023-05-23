@@ -1,4 +1,6 @@
 node_modules
 build
 launch.json
-/*png
+
+output/*.png
+!output/tiny.png
